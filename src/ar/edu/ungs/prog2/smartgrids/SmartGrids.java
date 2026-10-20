@@ -13,49 +13,69 @@ public class SmartGrids implements ISmartGrids {
 	}
 	
 	@Override
-	public void registrarPlantaSolar(String nombre, String direccion, double capacidadMaxima,
-			String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio,
-			double superficieCubierta, int cantidadPaneles, double horasRadiacionDiaria) {
-		PlantaSolar plantaNueva = new PlantaSolar(nombre, direccion, capacidadMaxima, false, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, superficieCubierta, cantidadPaneles, horasRadiacionDiaria);
-		
+	public void registrarPlantaSolar(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio, double superficieCubierta, int cantidadPaneles, double horasRadiacionDiaria) {
+		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
+
+		PlantaSolar plantaNueva = new PlantaSolar(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, superficieCubierta, cantidadPaneles, horasRadiacionDiaria);
 		plantas.put(nombre, plantaNueva);
 		
 	}
 
 	@Override
-	public void registrarPlantaEolica(String nombre, String direccion, double capacidadMaxima,
-			String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio,
-			int cantidadAerogeneradores, double alturaTorres, double velocidadMinimaViento) {
-		// TODO Auto-generated method stub
-
+	public void registrarPlantaEolica(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio, int cantidadAerogeneradores, double alturaTorres, double velocidadMinimaViento) {
+		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
+		
+		PlantaEolica plantaNueva = new PlantaEolica(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, velocidadMinimaViento, cantidadAerogeneradores, velocidadMinimaViento);
+		plantas.put(nombre, plantaNueva);
 	}
 
 	@Override
-	public void registrarPlantaHidraulica(String nombre, String direccion, double capacidadMaxima,
-			String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio,
-			int cantidadTurbinas, double capacidadEmbalse) {
-		// TODO Auto-generated method stub
+	public void registrarPlantaHidraulica(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio, int cantidadTurbinas, double capacidadEmbalse) {
+		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
 
+		PlantaHidraulica plantaNueva = new PlantaHidraulica(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, cantidadTurbinas, capacidadEmbalse);
+		plantas.put(nombre, plantaNueva);
 	}
 
 	@Override
-	public void registrarPlantaTermica(String nombre, String direccion, double capacidadMaxima,
-			String fechaHoraPuestaEnFuncionamiento, String tipoCombustible, double objetivoEmisionesCo2PorHora,
-			double capacidadAlmacenamientoCombustible) {
-		// TODO Auto-generated method stub
+	public void registrarPlantaTermica(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String tipoCombustible, double objetivoEmisionesCo2PorHora, double capacidadAlmacenamientoCombustible) {
+		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
+
+		PlantaTermica plantaNueva = new PlantaTermica(nombre, direccion, capacidadMaxima, true, fechaHoraPuestaEnFuncionamiento, tipoCombustible, capacidadAlmacenamientoCombustible, capacidadAlmacenamientoCombustible);
+		plantas.put(nombre, plantaNueva);
 
 	}
-
+	
 	@Override
 	public List<String> consultarPlantas() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> plantasExistentes = new ArrayList<>();
+
+		for (Planta planta : plantas.values()) {
+			String itemPlanta = String.format("%s (%s): %s", planta.getNombre(), planta.getEstaActiva(), planta.getFechaHoraPuestaEnFuncionamiento());
+			plantasExistentes.add(itemPlanta);
+		}
+		
+		return plantasExistentes;
+	}
+	
+	public void validarDatosPlanta(String nombre, String direccion, double capacidadMaxima,  String fechaHoraPuestaEnFuncionamiento) {
+		if (plantas.containsKey(nombre) || nombre == null || nombre == "" ||
+			direccion == null || direccion == "" || capacidadMaxima <= 0 ||
+			fechaHoraPuestaEnFuncionamiento == null ||
+			fechaHoraPuestaEnFuncionamiento == "") {
+				throw new RuntimeException("Error al registrar Planta");
+		}
 	}
 
 	@Override
 	public double capacidadMinimaCuota(String nombre) {
-		// TODO Auto-generated method stub
-		return 0;
+		Planta planta = plantas.get(nombre);
+		
+		if (planta == null) {
+			throw new RuntimeException("No existe la planta");
+		}
+		
+		return planta.calcularCapacidadMinimaCuota();
 	}
 
 	@Override
@@ -156,12 +176,15 @@ public class SmartGrids implements ISmartGrids {
 		
 		ArrayList<Planta> listaPlantas = new ArrayList<>();
 		
-		listaPlantas.addAll(plantas.values());		
+		listaPlantas.addAll(plantas.values());	
+		
+		for (Planta planta : plantas.values()) {
+			listaPlantas.add(planta);
+		}
 		
 		System.out.println(plantas.values());
 		
 		return mensaje.toString();
 	}
 
-	
 }

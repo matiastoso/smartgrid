@@ -9,19 +9,33 @@ public abstract class Planta {
 	private String fechaHoraPuestaEnFuncionamiento;
 	private boolean estaActiva;
 	
-	public Planta(String nombre, String direccion, double capacidadMaxima, boolean estaActiva,  String fechaHoraPuestaEnFuncionamiento) {
-
+	public Planta(String nombre, String direccion, double capacidadMaxima,  String fechaHoraPuestaEnFuncionamiento) {
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.capacidadMaxima = capacidadMaxima;
-		this.estaActiva = estaActiva;
+		this.estaActiva = true;
 		this.fechaHoraPuestaEnFuncionamiento = fechaHoraPuestaEnFuncionamiento;
 	}
 
 	public String getNombre() {
-		return nombre + " " + capacidadMaxima;
+		return nombre;
 	}
 	
+	public String getEstaActiva() {
+		if (estaActiva) {
+			return "ACTIVA";
+		} else {
+			return "INACTIVA";
+		}
+	}
 	
+	public String getFechaHoraPuestaEnFuncionamiento() {
+		return fechaHoraPuestaEnFuncionamiento;
+	}
 	
+	public double getCapacidadMaxima() {
+		return capacidadMaxima;
+	}
+	
+	public abstract double calcularCapacidadMinimaCuota ();
 }
