@@ -13,14 +13,12 @@ public class Main {
         sistema.registrarPlantaEolica("Eolica Sur", "Ruta 2", 1200, HORA_MON_1, "Viento", 80.0, 4, 80, 5);
         sistema.registrarPlantaHidraulica("Hidraulica Oeste", "Ruta 3", 2400, HORA_MON_2, "Aire", 90, 10, 10);
 		sistema.registrarPlantaTermica("Termica Este", "Ruta 4", 1000, HORA_BAJA, "Nose", 10, 10);
-		
-		
-		/*
+
 		System.out.println("PLANTAS REGISTRADAS:");
 		for (String msj : sistema.consultarPlantas()) {
 			System.out.println(msj);
 		}
-		*/
+		
 	}
 
 }

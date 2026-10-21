@@ -124,22 +124,64 @@ public class SmartGrids implements ISmartGrids {
 
 	@Override
 	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias) {
+		validarFecha(fechaHora);
+
 		if (!plantas.containsKey(nombre)) {
 			throw new RuntimeException("ERROR: no existe la planta");
+		}		
+		
+		Planta plantaSeleccionada = plantas.get(nombre);
+		
+		if (plantaSeleccionada.getEstaActiva() == false) {
+			throw new RuntimeException("ERROR: la planta debe estar activa para registrar un monitoreo");
 		}
+		
+		Monitoreo monitoreo = new Monitoreo(LocalDateTime.parse(fechaHora), energiaGenerada, incidencias);
+		plantaSeleccionada.agregarMonitoreo(monitoreo);
 	}
 
 	@Override
-	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias,
-			double velocidadViento) {
-		// TODO Auto-generated method stub
+	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias, double velocidadViento) {
+		validarFecha(fechaHora);
 
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}		
+		
+		Planta plantaSeleccionada = plantas.get(nombre);
+		
+		if (plantaSeleccionada.getEstaActiva() == false) {
+			throw new RuntimeException("ERROR: la planta debe estar activa para registrar un monitoreo");
+		}
+		
+		if (velocidadViento < 0) {
+			throw new RuntimeException("La velocidad del viento no puede ser negativa");
+		}
+		
+		MonitoreoEolico monitoreo = new MonitoreoEolico(LocalDateTime.parse(fechaHora), energiaGenerada, incidencias, velocidadViento);
+		plantaSeleccionada.agregarMonitoreo(monitoreo);
 	}
 
 	@Override
-	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias,
-			double co2Emitido, double combustibleUtilizado) {
-		// TODO Auto-generated method stub
+	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias, double co2Emitido, double combustibleUtilizado) {
+		validarFecha(fechaHora);
+
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}		
+		
+		Planta plantaSeleccionada = plantas.get(nombre);
+		
+		if (plantaSeleccionada.getEstaActiva() == false) {
+			throw new RuntimeException("ERROR: la planta debe estar activa para registrar un monitoreo");
+		}
+		
+		if (co2Emitido < 0 || combustibleUtilizado < 0) {
+            throw new RuntimeException("El CO2 o el combustible no pueden ser negativos.");
+        }
+		
+		MonitoreoTermico monitoreo = new MonitoreoTermico(LocalDateTime.parse(fechaHora), energiaGenerada, incidencias, co2Emitido, combustibleUtilizado);
+		plantaSeleccionada.agregarMonitoreo(monitoreo);
 
 	}
 
