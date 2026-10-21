@@ -22,7 +22,7 @@ public class PlantaHidraulica extends Planta {
 
 	@Override
 	public double calcularCapacidadMinimaCuota() {
-		return (super.getCapacidadMaxima() * eficienciaPromedio / 100) / 24;
+		return (super.getCapacidadMaxima() * eficienciaPromedio);
 	}
 
 }

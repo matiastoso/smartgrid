@@ -23,7 +23,7 @@ public class PlantaSolar extends Planta{
 
 	@Override
 	public double calcularCapacidadMinimaCuota() {
-		double eficienciaDecimal = eficienciaPromedio / 100.0; 
+		double eficienciaDecimal = eficienciaPromedio / 10.0; 
         
         // Fórmula de la cuota por hora
         return (super.getCapacidadMaxima() * horasRadiacionDiaria * eficienciaDecimal) / 24.0;
