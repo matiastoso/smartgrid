@@ -25,6 +25,10 @@ public abstract class Planta {
 		return estaActiva;
 	}
 	
+	public void setEstaActiva(boolean nuevoEstado) {
+		this.estaActiva = nuevoEstado;
+	}
+	
 	public String getFechaHoraPuestaEnFuncionamiento() {
 		return fechaHoraPuestaEnFuncionamiento;
 	}

@@ -1,5 +1,7 @@
 package ar.edu.ungs.prog2.smartgrids;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,14 +83,34 @@ public class SmartGrids implements ISmartGrids {
 
 	@Override
 	public void activarPlanta(String nombre, String fechaHora) {
-		// TODO Auto-generated method stub
-
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}
+		validarFecha(fechaHora);
+		
+		plantas.get(nombre).setEstaActiva(true);
 	}
 
 	@Override
 	public void desactivarPlanta(String nombre, String fechaHora) {
-		// TODO Auto-generated method stub
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}
+		validarFecha(fechaHora);
+		
+		plantas.get(nombre).setEstaActiva(false);
+	}
 
+	private void validarFecha(String fechaHora) {
+		if (fechaHora == null || fechaHora == "") {
+			throw new RuntimeException("La fecha no debe estar vacia");
+		}
+		
+		try {
+			LocalDateTime.parse(fechaHora);
+		} catch(DateTimeParseException e) {
+			throw new RuntimeException("ERROR :" + e.getMessage());
+		}
 	}
 
 	@Override
@@ -102,8 +124,9 @@ public class SmartGrids implements ISmartGrids {
 
 	@Override
 	public void registrarMonitoreo(String nombre, String fechaHora, double energiaGenerada, int incidencias) {
-		// TODO Auto-generated method stub
-
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}
 	}
 
 	@Override
