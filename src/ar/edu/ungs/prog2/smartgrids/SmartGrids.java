@@ -51,7 +51,8 @@ public class SmartGrids implements ISmartGrids {
 		List<String> plantasExistentes = new ArrayList<>();
 
 		for (Planta planta : plantas.values()) {
-			String itemPlanta = String.format("%s (%s): %s", planta.getNombre(), planta.getEstaActiva(), planta.getFechaHoraPuestaEnFuncionamiento());
+			String estadoActual = (planta.getEstaActiva()) ? "ACTIVA" : "INACTIVA";
+			String itemPlanta = String.format("%s (%s): %s", planta.getNombre(),  estadoActual, planta.getFechaHoraPuestaEnFuncionamiento());
 			plantasExistentes.add(itemPlanta);
 		}
 		
@@ -92,8 +93,11 @@ public class SmartGrids implements ISmartGrids {
 
 	@Override
 	public boolean estaActiva(String nombre) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!plantas.containsKey(nombre)) {
+			throw new RuntimeException("ERROR: no existe la planta");
+		}
+		
+		return plantas.get(nombre).getEstaActiva();
 	}
 
 	@Override

@@ -21,12 +21,8 @@ public abstract class Planta {
 		return nombre;
 	}
 	
-	public String getEstaActiva() {
-		if (estaActiva) {
-			return "ACTIVA";
-		} else {
-			return "INACTIVA";
-		}
+	public Boolean getEstaActiva() {
+		return estaActiva;
 	}
 	
 	public String getFechaHoraPuestaEnFuncionamiento() {

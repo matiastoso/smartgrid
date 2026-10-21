@@ -17,4 +17,9 @@ public class PlantaTermica extends Planta {
 	public String toString() {
 		return super.getNombre();
 	}
+
+	@Override
+	public double calcularCapacidadMinimaCuota() {
+		return super.getCapacidadMaxima() / 2.0;
+	}
 }
