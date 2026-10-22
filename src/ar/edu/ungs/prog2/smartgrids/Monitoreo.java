@@ -24,4 +24,10 @@ public class Monitoreo {
     public int getIncidencias() { 
     	return incidencias;
     }
+    
+
+   public boolean cumpleCuota(double cuota) {
+    return energiaGenerada >= cuota;
+}
+
 }

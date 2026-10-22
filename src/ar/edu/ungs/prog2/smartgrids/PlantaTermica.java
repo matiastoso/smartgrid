@@ -22,4 +22,20 @@ public class PlantaTermica extends Planta {
 	public double calcularCapacidadMinimaCuota() {
 		return super.getCapacidadMaxima() / 2.0;
 	}
+	
+
+@Override
+   public boolean cumpleCuota(Monitoreo monitoreo) {
+      if (!(monitoreo instanceof MonitoreoTermico)) {
+        return false;
+    }
+
+    MonitoreoTermico monitoreoTermico = (MonitoreoTermico) monitoreo;
+
+    return monitoreoTermico.cumpleCuotaTermica(
+        calcularCapacidadMinimaCuota(),
+        objetivoEmisionesCo2PorHora
+    );
+}
+
 }

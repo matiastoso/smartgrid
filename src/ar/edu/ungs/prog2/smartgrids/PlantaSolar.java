@@ -15,7 +15,7 @@ public class PlantaSolar extends Planta{
 		this.cantidadPaneles = cantidadPaneles;
 		this.horasRadiacionDiaria = horasRadiacionDiaria;
 	}
-
+	
 	@Override
 	public String toString() {
 		return super.getNombre();
@@ -28,5 +28,10 @@ public class PlantaSolar extends Planta{
         // Fórmula de la cuota por hora
         return (super.getCapacidadMaxima() * horasRadiacionDiaria * eficienciaDecimal) / 24.0;
 	}
+
+    @Override
+    public String fuenteRenovable() {
+       return fuentePrimaria;
+}
 
 }

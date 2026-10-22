@@ -16,6 +16,13 @@ public class Main {
 
 		System.out.println(sistema.capacidadMinimaCuota("Termica Este"));
 		
+		System.out.println("Total generado: "
+		        + sistema.totalGenerado("Solar Norte"));
+
+		System.out.println("Plantas renovables por fuente: "
+		        + sistema.plantasRenovablesPorFuente());
+		
 	}
+	
 
 }

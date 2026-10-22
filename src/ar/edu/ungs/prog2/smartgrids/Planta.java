@@ -1,5 +1,6 @@
 package ar.edu.ungs.prog2.smartgrids;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -59,4 +60,58 @@ public abstract class Planta {
 
         registroMonitoreos.put(fechaHora, monitoreo);
     }
+	
+
+   public double calcularTotalGenerado() {
+    double total = 0;
+
+    for (Monitoreo monitoreo : registroMonitoreos.values()) {
+        total += monitoreo.getEnergiaGenerada();
+    }
+
+    return total;
+}
+
+  public int[] calcularIncidenciasPorHora() {
+    int[] incidenciasPorHora = new int[24];
+
+    for (Monitoreo monitoreo : registroMonitoreos.values()) {
+        int hora = monitoreo.getFechaHora().getHour();
+
+        incidenciasPorHora[hora] += monitoreo.getIncidencias();
+    }
+
+    return incidenciasPorHora;
+}
+  
+  
+
+   public int[] calcularHistograma(LocalDate desde, LocalDate hasta) {
+    int[] histograma = new int[24];
+
+    for (Monitoreo monitoreo : registroMonitoreos.values()) {
+        LocalDate fecha = monitoreo.getFechaHora().toLocalDate();
+
+        if (!fecha.isBefore(desde) && !fecha.isAfter(hasta)) {
+            int hora = monitoreo.getFechaHora().getHour();
+
+            if (cumpleCuota(monitoreo)) {
+                histograma[hora]++;
+            }
+        }
+    }
+
+    return histograma;
+}
+
+    public boolean cumpleCuota(Monitoreo monitoreo) {
+      return monitoreo.cumpleCuota(calcularCapacidadMinimaCuota());
+}
+  
+
+  public String fuenteRenovable() {
+    return null;
+}
+
+
 }

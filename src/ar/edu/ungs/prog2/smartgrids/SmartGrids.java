@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.util.TreeMap;
 
 public class SmartGrids implements ISmartGrids {
 	private HashMap<String, Planta> plantas;
@@ -22,7 +24,7 @@ public class SmartGrids implements ISmartGrids {
 		plantas.put(nombre, plantaNueva);
 		
 	}
-
+	
 	@Override
 	public void registrarPlantaEolica(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String fuentePrimaria, double eficienciaPromedio, int cantidadAerogeneradores, double alturaTorres, double velocidadMinimaViento) {
 		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
@@ -43,7 +45,8 @@ public class SmartGrids implements ISmartGrids {
 	public void registrarPlantaTermica(String nombre, String direccion, double capacidadMaxima, String fechaHoraPuestaEnFuncionamiento, String tipoCombustible, double objetivoEmisionesCo2PorHora, double capacidadAlmacenamientoCombustible) {
 		validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
 
-		PlantaTermica plantaNueva = new PlantaTermica(nombre, direccion, capacidadMaxima, true, fechaHoraPuestaEnFuncionamiento, tipoCombustible, capacidadAlmacenamientoCombustible, capacidadAlmacenamientoCombustible);
+		PlantaTermica plantaNueva = new PlantaTermica(nombre, direccion, capacidadMaxima, true, fechaHoraPuestaEnFuncionamiento,tipoCombustible, objetivoEmisionesCo2PorHora,
+				capacidadAlmacenamientoCombustible);
 		plantas.put(nombre, plantaNueva);
 
 	}
@@ -185,29 +188,70 @@ public class SmartGrids implements ISmartGrids {
 
 	}
 
-	@Override
-	public double totalGenerado(String nombre) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int[] incidenciasPorHora(String nombre) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public double totalGenerado(String nombre) {
+    Planta planta = plantas.get(nombre);
 
-	@Override
-	public int[] histogramaCumplimiento(String nombre, String fechaDesde, String fechaHasta) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    if (planta == null) {
+        throw new RuntimeException("No existe la planta");
+    }
 
-	@Override
-	public Map<String, Integer> plantasRenovablesPorFuente() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    return planta.calcularTotalGenerado();
+}
+
+
+   @Override
+   public int[] incidenciasPorHora(String nombre) {
+    Planta planta = plantas.get(nombre);
+
+    if (planta == null) {
+        throw new RuntimeException("No existe la planta");
+    }
+
+    return planta.calcularIncidenciasPorHora();
+}
+   
+
+
+    @Override
+    public int[] histogramaCumplimiento(String nombre, String fechaDesde, String fechaHasta) {
+      Planta planta = plantas.get(nombre);
+
+      if (planta == null) {
+        throw new RuntimeException("No existe la planta");
+    }
+
+    LocalDate desde = LocalDate.parse(fechaDesde);
+    LocalDate hasta = LocalDate.parse(fechaHasta);
+
+    if (desde.isAfter(hasta)) {
+        throw new RuntimeException("La fecha inicial es posterior a la final");
+    }
+
+    return planta.calcularHistograma(desde, hasta);
+}
+
+
+    @Override
+    public Map<String, Integer> plantasRenovablesPorFuente() {
+        Map<String, Integer> resultado = new TreeMap<>();
+
+    for (Planta planta : plantas.values()) {
+        String fuente = planta.fuenteRenovable();
+
+        if (fuente != null) {
+            if (resultado.containsKey(fuente)) {
+                resultado.put(fuente, resultado.get(fuente) + 1);
+            } else {
+                resultado.put(fuente, 1);
+            }
+        }
+    }
+
+    return resultado;
+}
+
 
 	@Override
 	public List<String> plantasQueNuncaCumplieronCuota() {

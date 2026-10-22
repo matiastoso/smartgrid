@@ -29,4 +29,9 @@ public class PlantaEolica extends Planta {
 		return (super.getCapacidadMaxima() * eficienciaPromedio);
 	}
 
+    @Override
+    public String fuenteRenovable() {
+       return fuentePrimaria;
+}
+
 }

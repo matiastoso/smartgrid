@@ -14,4 +14,11 @@ public class MonitoreoTermico extends Monitoreo {
 	
 	public double getCo2Emitido() { return co2Emitido; }
     public double getCombustibleUtilizado() { return combustibleUtilizado; }
+    
+
+    public boolean cumpleCuotaTermica(double cuota, double objetivoCo2) {
+    return cumpleCuota(cuota) && co2Emitido < objetivoCo2;
 }
+
+}
+

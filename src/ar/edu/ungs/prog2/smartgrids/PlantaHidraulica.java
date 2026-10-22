@@ -14,7 +14,7 @@ public class PlantaHidraulica extends Planta {
 		this.cantidadTurbinas = cantidadTurbinas;
 		this.capacidadEmbalse = capacidadEmbalse;
 	}
-
+	
 	@Override
 	public String toString() {
 		return super.getNombre();
@@ -24,5 +24,11 @@ public class PlantaHidraulica extends Planta {
 	public double calcularCapacidadMinimaCuota() {
 		return (super.getCapacidadMaxima() * eficienciaPromedio);
 	}
+ 
+
+    @Override
+    public String fuenteRenovable() {
+       return fuentePrimaria;
+}
 
 }

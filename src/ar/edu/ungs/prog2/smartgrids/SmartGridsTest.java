@@ -34,7 +34,7 @@ public class SmartGridsTest {
         // cuota = 600 / 2 = 300 y CO2 < 50
         sistema.registrarPlantaTermica("Termica1", "Ruta 4", 600, PUESTA, "Gas", 50, 900);
     }
-
+    
 
     @Test
     public void registraYConsultaPlantas() {
