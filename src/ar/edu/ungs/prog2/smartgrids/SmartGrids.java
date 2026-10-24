@@ -3,19 +3,17 @@ package ar.edu.ungs.prog2.smartgrids;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
 public class SmartGrids implements ISmartGrids {
-    private HashMap<String, Planta> plantas;
-    private List<String> ordenNombres;
+    private LinkedHashMap<String, Planta> plantas;
     
     public SmartGrids () {
-        plantas = new HashMap<>();
-        ordenNombres = new ArrayList<>();
+    	plantas = new LinkedHashMap<>();
     }
     
     @Override
@@ -23,7 +21,6 @@ public class SmartGrids implements ISmartGrids {
         validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
         PlantaSolar plantaNueva = new PlantaSolar(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, superficieCubierta, cantidadPaneles, horasRadiacionDiaria);
         plantas.put(nombre, plantaNueva);
-        ordenNombres.add(nombre);
     }
     
     @Override
@@ -31,7 +28,6 @@ public class SmartGrids implements ISmartGrids {
         validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
         PlantaEolica plantaNueva = new PlantaEolica(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, velocidadMinimaViento, cantidadAerogeneradores, velocidadMinimaViento);
         plantas.put(nombre, plantaNueva);
-        ordenNombres.add(nombre);
     }
 
     @Override
@@ -39,7 +35,6 @@ public class SmartGrids implements ISmartGrids {
         validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
         PlantaHidraulica plantaNueva = new PlantaHidraulica(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento, fuentePrimaria, eficienciaPromedio, cantidadTurbinas, capacidadEmbalse);
         plantas.put(nombre, plantaNueva);
-        ordenNombres.add(nombre);
     }
 
     @Override
@@ -47,13 +42,12 @@ public class SmartGrids implements ISmartGrids {
         validarDatosPlanta(nombre, direccion, capacidadMaxima, fechaHoraPuestaEnFuncionamiento);
         PlantaTermica plantaNueva = new PlantaTermica(nombre, direccion, capacidadMaxima, true, fechaHoraPuestaEnFuncionamiento,tipoCombustible, objetivoEmisionesCo2PorHora, capacidadAlmacenamientoCombustible);
         plantas.put(nombre, plantaNueva);
-        ordenNombres.add(nombre);
     }
     
     @Override
     public List<String> consultarPlantas() {
         List<String> plantasExistentes = new ArrayList<>();
-        for (String nombrePlanta : ordenNombres) {
+        for (String nombrePlanta : plantas.keySet()) {
             Planta planta = plantas.get(nombrePlanta);
             String estadoActual = (planta.getEstaActiva()) ? "ACTIVA" : "INACTIVA";
             String itemPlanta = String.format("%s (%s): %s", planta.getNombre(), estadoActual, planta.getFechaHoraPuestaEnFuncionamiento());
@@ -232,7 +226,7 @@ public class SmartGrids implements ISmartGrids {
     @Override
     public List<String> plantasQueNuncaCumplieronCuota() {
         List<String> resultado = new ArrayList<>();
-        for (String nombrePlanta : ordenNombres) {
+        for (String nombrePlanta : plantas.keySet()) {
             Planta planta = plantas.get(nombrePlanta);
             if (planta.nuncaCumplioCuota()) {
                 resultado.add(planta.getNombre());
@@ -246,7 +240,7 @@ public class SmartGrids implements ISmartGrids {
     public String horasSinVelocidadMinimaPorPlantaEolica() {
         StringBuilder reporte = new StringBuilder();
         
-        for (String nombrePlanta : ordenNombres) {
+        for (String nombrePlanta : plantas.keySet()) {
             Planta planta = plantas.get(nombrePlanta);
             
             if (planta instanceof PlantaEolica) {
