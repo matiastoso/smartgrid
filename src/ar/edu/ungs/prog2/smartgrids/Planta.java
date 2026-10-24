@@ -2,10 +2,13 @@ package ar.edu.ungs.prog2.smartgrids;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public abstract class Planta {
+	private ArrayList<PeriodoInactividad> periodosInactividad;
+    private LocalDateTime inicioInactividadActual;
     private String nombre;
     private String direccion;
     private double capacidadMaxima;
@@ -20,13 +23,14 @@ public abstract class Planta {
         this.estaActiva = true;
         this.fechaHoraPuestaEnFuncionamiento = fechaHoraPuestaEnFuncionamiento;
         this.registroMonitoreos = new HashMap<>();
+        this.periodosInactividad = new ArrayList<>();
+        this.inicioInactividadActual = null;
     }
 
     public String getNombre() { return nombre; }
     
     public Boolean getEstaActiva() { return estaActiva; }
     
-    public void setEstaActiva(boolean nuevoEstado) { this.estaActiva = nuevoEstado; }
     
     public String getFechaHoraPuestaEnFuncionamiento() { return fechaHoraPuestaEnFuncionamiento; }
     
@@ -148,5 +152,36 @@ public abstract class Planta {
             }
         }
         return horasAfectadas;
+    }
+    
+    public void desactivar(LocalDateTime fechaHora) {
+        if (estaActiva) {
+            this.estaActiva = false;
+            this.inicioInactividadActual = fechaHora;
+        }
+    }
+
+    public void activar(LocalDateTime fechaHora) {
+        if (!estaActiva && this.inicioInactividadActual != null) {
+            PeriodoInactividad periodo = new PeriodoInactividad(this.inicioInactividadActual, fechaHora);
+            this.periodosInactividad.add(periodo);
+            this.inicioInactividadActual = null;
+        }
+        this.estaActiva = true;
+    }
+
+    public boolean estaInactivaEn(LocalDateTime fechaHoraConsulta) {
+        if (!estaActiva && this.inicioInactividadActual != null) {
+            if (!fechaHoraConsulta.isBefore(this.inicioInactividadActual)) {
+                return true;
+            }
+        }
+
+        for (PeriodoInactividad p : periodosInactividad) {
+            if (p.incluye(fechaHoraConsulta)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

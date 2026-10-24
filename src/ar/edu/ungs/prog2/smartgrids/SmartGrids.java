@@ -80,16 +80,17 @@ public class SmartGrids implements ISmartGrids {
             throw new RuntimeException("ERROR: no existe la planta");
         }
         validarFecha(fechaHora);
-        plantas.get(nombre).setEstaActiva(true);
+        plantas.get(nombre).activar(LocalDateTime.parse(fechaHora));
     }
 
+ 
     @Override
     public void desactivarPlanta(String nombre, String fechaHora) {
         if (!plantas.containsKey(nombre)) {
             throw new RuntimeException("ERROR: no existe la planta");
         }
         validarFecha(fechaHora);
-        plantas.get(nombre).setEstaActiva(false);
+        plantas.get(nombre).desactivar(LocalDateTime.parse(fechaHora));
     }
 
     private void validarFecha(String fechaHora) {
@@ -298,9 +299,11 @@ public class SmartGrids implements ISmartGrids {
     
     @Override
     public List<String> plantasInactivasEn(String fechaHora) {
+        validarFecha(fechaHora);
+        LocalDateTime consulta = LocalDateTime.parse(fechaHora);
         List<String> resultado = new ArrayList<>();
         for (Planta planta : plantas.values()) {
-            if (!planta.getEstaActiva()) {
+            if (planta.estaInactivaEn(consulta)) {
                 resultado.add(planta.toString());
             }
         }
